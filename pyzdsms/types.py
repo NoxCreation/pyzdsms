@@ -1,3 +1,5 @@
+# Tipado de los datos JSON que son respondidos por el endpoint
+
 import json
 
 class InfoMe:

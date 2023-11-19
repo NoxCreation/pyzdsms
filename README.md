@@ -1,49 +1,46 @@
-# PYZDSMS
-Zdsms.cu es un servicio en internet de Zona Digital (https://zdsms.cu/) con el que puedes enviar sms dentro de territorio cubano.
+# PYZDSMS: Biblioteca para enviar SMS en Cuba con los servicios de ZonaDigital
 
-La siguiente biblioteca facilita el uso de la API que ofrece ZonaDigital (https://zdsms.cu/documentation). Estaremos agradecido de cualquier colaboración que desee hacer.
+pyzdsms es una biblioteca de Python que te permite enviar SMS dentro de Cuba usando la API de ZonaDigital (https://zdsms.cu/). Con pyzdsms puedes crear campañas de marketing, enviar notificaciones, confirmaciones y más, de forma fácil y segura.
 
-# ¿Cómo obtener acceso?
+# Requisitos previos
 
-Para obtener acceso a los servicios de ZonaDigital para enviar SMS, debe crearse una cuenta en https://zdsms.cu/. Esta página lo redirige a un panel de control donde tendrá acceso a toda la información del servicio SMS.
+Para usar pyzdsms necesitas lo siguiente:
+- Python >= 3.5
+- pip
+- Una cuenta de ZonaDigital
 
-En el menú Recargar debe comprar algún plan de los que se ofertan o crear un plan personalizado a sus intereses.
+# Instalación
 
-# ¿Cómo instalar?
+Para instalar pyzdsms, ejecuta el siguiente comando:
 
-Para instalar solo debe ejecutar el comando pip de instalación de la biblioteca.
-
-    pip install pyzdsms
+    pip install pyzdsms 
  
- Requiere Python >= 3.5 con pip. (https://pypi.org/project/pyzdsms/)
- 
- 
-# ¿Cómo enviar un sms?
+# Uso
 
-Una vez tenga instalada la biblioteca debe en su proyecto importarla.
+Para enviar un SMS, primero debes importar la biblioteca:
 
     from pyzdsms import pyzdsms
 
-Luego debe obtener un token de autenticación. Es importante aclarar que la plataforma de ZonaDigital admite dos formas de obtener el token de autenticación. La primera es obtener un token en tiempo de ejecución que expira pasada las 24h. La otra es crear un token que no expire en el tiempo. La biblioteca de pyzdsms funciona con cualquiera de los dos tokens, pero por el momento recomendamos generar un token no expirable.
+Luego debes obtener un token de autenticación de ZonaDigital. Puedes usar un token persistente o uno temporal. En este ejemplo usaremos un token persistente que debes guardar en una variable de entorno:
 
-Para ello vaya a Tokens en el panel de control y dele al botón Crear Token Persistente. Escriba un nombre de identificación del token y guarde el mismo en las variables de entorno de su proyecto de forma segura donde no pueda ser accedida por terceros.
+    TOKEN_PERSISTENT = os.environ.get("TOKEN_PERSISTENT") # Obtén tu token de ZonaDigital y guárdalo como una variable de entorno
 
-Una vez tenga en su poder este Token, debe crear una instancia:
+Después debes crear una instancia de pyzdsms con el token:
 
     zd = pyzdsms(TOKEN_PERSISTENT)
 
-De esta forma ya puede tener acceso a todas las funciones desde la variable "zd". Para enviar el SMS dejamos un ejemplo:
+Finalmente, puedes enviar el SMS con el método send_sms, indicando el número de destino y el texto del mensaje. El método te devuelve una respuesta con el mensaje y el id del SMS: 
 
-    number_send = "535*******"
+    number_send = "535*******" # Número de destino
     response = zd.send_sms(
         number_send,
-        "Esto es un sms desde pyzdsms"
+        "Esto es un sms desde pyzdsms" # Texto del mensaje
     )
-    message = response.getMessage()
-    id = response.getId()
-    print("message", message, "id", id)
+    message = response.getMessage() # Mensaje de la respuesta
+    id = response.getId() # Id del SMS
+    print("message", message, "id", id) # Imprime el mensaje y el id
 
-Con este código basta para que pueda enviarse un sms a cualquier persona dentro de Cuba. Para obtener el estado de este SMS puede con el id obtener la información correspondiente:
+Con este código puedes enviar un sms a cualquier persona dentro de Cuba. Para obtener el estado de este SMS puede con el id obtener la información correspondiente:
 
     details = zd.details_sms(id)
     print(details.getStatus())
@@ -53,7 +50,7 @@ Con este código basta para que pueda enviarse un sms a cualquier persona dentro
     print(details.getSmsCount())
     print(details.getVia())
 
-# Obtener información de todos los SMS enviados
+# Listar SMS
 
 Puede listar todos los SMS enviados de una forma muy simple:
 
@@ -82,7 +79,7 @@ Si desea obtener la información de forma escalada, puede paginar la obtención:
 
 # Crear campañas
 
-Una campaña consiste en el envio masivo de SMS a un listado de Lead o Posibles Clientes que tenga como estrategia de marqueting. La biblioteca brinda de una forma sencilla para crear campañas con este registro de usuarios que usted posea:
+Una campaña consiste en el envío masivo de SMS a un listado de Lead o Posibles Clientes que tenga como estrategia de marqueting. La biblioteca brinda de una forma sencilla para crear campañas con este registro de usuarios que usted posea:
 
     campaign = zd.create_campaign()\
         .addName("Campaña#12")\
@@ -121,3 +118,16 @@ Para obtener el listado de todas las campañas puede tomar este ejemplo:
         print(campaign.getName())
         print(campaign.getDelivered())
         print(campaign.getUserId())
+
+# Contribución
+
+Si te interesa contribuir a pyzdsms, puedes hacerlo de las siguientes formas:
+
+- Reportando errores o sugerencias en la sección de issues.
+- Haciendo un fork del repositorio y enviando un pull request con tus cambios.
+- Mejorando la documentación o los ejemplos.
+- Compartiendo el proyecto con otros usuarios que puedan beneficiarse de él.
+
+# Licencia
+
+pyzdsms está licenciado bajo la GNU General Public License v3.0. Consulta el archivo LICENSE para más detalles.

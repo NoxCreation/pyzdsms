@@ -52,6 +52,10 @@ class pyzdsms():
             raise Exception(message)
 
     def details_sms(self, id) -> InfoSMS:
+        """
+        :param id: Id del SMS
+        :return: Retorna información del SMS
+        """
         response = get_request(
             ENDPOINTS['detailsms'].replace("ID", id),
             self.headers
@@ -66,6 +70,10 @@ class pyzdsms():
             raise Exception(message)
 
     def get_all_sms(self, page=None) -> InfoAllSMS:
+        """
+        :param page: (No obligatorio) pagina a visualizar
+        :return: retorna todos los sms enviados
+        """
         response = get_request(
             ENDPOINTS['getallsms'] if page == None else ENDPOINTS['getallsms_paginate'].replace("PAGE", f"{page}"),
             self.headers
@@ -83,6 +91,9 @@ class pyzdsms():
             raise Exception(message)
 
     def create_campaign(self):
+        """
+        :return: Devuelve una instacia de Campaña
+        """
         return zdcampaign(self)
 
 class zdcampaign():
@@ -94,18 +105,33 @@ class zdcampaign():
         self.self_pyzdsms = self_pyzdsms
 
     def addName(self, campaign_name):
+        """
+        :param campaign_name: Nombre que se le va a dar a la campaña
+        :return: Retorna la instancia de campaña
+        """
         self.campaign_name = campaign_name
         return self
 
     def addRecipients(self, phone):
+        """
+        :param phone: Telefono a agregar a al envio masivo de la campaña
+        :return: Retorna la instancia de campaña
+        """
         self.recipients.append(phone)
         return self
 
     def setText(self, text_sms):
+        """
+        :param text_sms: Agrega el SMS a enviar en la campaña
+        :return: Retorna la instancia de campaña
+        """
         self.text_sms = text_sms
         return self
 
     def send(self):
+        """
+        :return: Sin retorno
+        """
         if self.campaign_name == "":
             raise Exception("You must add a name to the campaign")
         elif self.text_sms == "":
@@ -133,6 +159,9 @@ class zdcampaign():
             raise Exception(message)
 
     def getAll(self):
+        """
+        :return: Devuelve todas las campañas
+        """
         response = get_request(
             ENDPOINTS['allcampaign'],
             headers=self.self_pyzdsms.headers,
