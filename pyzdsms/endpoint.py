@@ -6,7 +6,11 @@ VERSION_ENDPOINT = "api/v1"
 ENDPOINTS = {
     "me": "/me",
     "sendsms": "/message/send",
-    "getallsms": "/message/"
+    "getallsms": "/message/",
+    "getallsms_paginate": "/message/paginated?page=PAGE",
+    "detailsms": "/message/ID/status",
+    "sendcampaign": "/campaign/send",
+    "allcampaign": "/campaign/"
 }
 
 def get_request(endpoint, headers, payload={}, method="GET"):

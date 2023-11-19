@@ -1,3 +1,4 @@
+import json
 
 class InfoMe:
     def __init__(self, response):
@@ -46,22 +47,51 @@ class InfoMe:
 class InfoSendSMS:
     def __init__(self, response):
         self.json = response
-        message, = response.values()
+        message, id  = response.values()
         self.message = message
+        self.id = id
 
     def getMessage(self):
         return self.message
+
+    def getId(self):
+        return self.id
 
 class InfoAllSMS:
     def __init__(self, response):
         self.json = response
         self.sms = response
+        self.count_paginated = 0
+        self.count_items = 0
 
-    def getAllSMS(self):
+    def getAllSMS(self, paginated=False):
+        """
+        :param paginated: (No obligatorio) Indica si quiere obtenerse la informacion paginada
+        :return: Devuelve los items de la pagina que se pide
+        """
         response = []
-        for r in self.sms:
-            response.append(InfoSMS(r))
+        if not paginated:
+            for r in self.sms:
+                response.append(InfoSMS(r))
+        else:
+            data = self.sms['data']
+            for r in data:
+                response.append(InfoSMS(r))
+            self.count_paginated = self.sms['last_page']
+            self.count_items = self.sms['per_page']
         return response
+
+    def countPaginated(self):
+        """
+        :return: Devuelve la cantidad de paginas
+        """
+        return self.count_paginated
+
+    def countItems(self):
+        """
+        :return: Devuelve la cantidad de items en la pagincacion si se usa
+        """
+        return self.count_items
 
 class InfoSMS:
     def __init__(self, response):
@@ -95,3 +125,48 @@ class InfoSMS:
 
     def getCreatedAt(self):
         return self.created_at
+
+class InfoCampaign:
+    def __init__(self, response):
+        self.json = response
+        id, name, recipients, mstext, sms_count, via, status, user_id, created_at, delivered = response.values()
+        self.id = id
+        self.name = name
+        self.recipients = recipients
+        self.mstext = mstext
+        self.sms_count = sms_count
+        self.via = via
+        self.status = status
+        self.user_id = user_id
+        self.created_at = created_at
+        self.delivered = delivered
+
+    def getId(self):
+        return self.id
+
+    def getName(self):
+        return self.name
+
+    def getRecipients(self):
+        return json.loads(self.recipients)
+
+    def getText(self):
+        return self.mstext
+
+    def getSmsCount(self):
+        return self.sms_count
+
+    def getVia(self):
+        return self.via
+
+    def getStatus(self):
+        return self.status
+
+    def getUserId(self):
+        return self.user_id
+
+    def getCreatedAt(self):
+        return self.created_at
+
+    def getDelivered(self):
+        return self.delivered
