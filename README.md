@@ -19,7 +19,7 @@ Para instalar pyzdsms, ejecuta el siguiente comando:
 
 Para enviar un SMS, primero debes importar la biblioteca:
 
-    from pyzdsms import pyzdsms
+    from pyzdsms.pyzdsms import pyzdsms
 
 Luego debes obtener un token de autenticación de ZonaDigital. Puedes usar un token persistente o uno temporal. En este ejemplo usaremos un token persistente que debes guardar en una variable de entorno:
 
